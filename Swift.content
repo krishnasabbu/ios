@@ -1,0 +1,306 @@
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        NavigationStack {
+            WelcomeView()
+                .navigationTransition(.slide)
+        }
+    }
+}
+
+// MARK: - Screen 1: Welcome
+
+struct WelcomeView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            
+            Spacer()
+            
+            Text("WELLS FARGO")
+                .font(.headline)
+            
+            Image(systemName: "creditcard.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 80)
+                .foregroundColor(.red)
+            
+            Text("Fast. Simple. Effortless.")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Everyday Checking")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("• Existing customers sign on to apply faster")
+                Text("• Have your SSN and ID card handy")
+            }
+            .font(.footnote)
+            .foregroundColor(.gray)
+            
+            Toggle("I'm applying for a joint account", isOn: .constant(false))
+                .padding(.horizontal)
+            
+            Spacer()
+            
+            NavigationLink {
+                AccountFormView()
+            } label: {
+                Text("Let's go")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            
+            NavigationLink("Sign on") {
+                AccountFormView()
+            }
+            .padding(.bottom)
+        }
+        .padding()
+    }
+}
+
+// MARK: - Screen 2: Account Form (With DatePicker)
+
+struct AccountFormView: View {
+    
+    @State private var firstName = ""
+    @State private var middleInitial = ""
+    @State private var lastName = ""
+    @State private var dob = Date()
+    @State private var email = ""
+    @State private var mobile = ""
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                
+                Text("WELLS FARGO")
+                    .font(.headline)
+                
+                Text("Your new account is minutes away")
+                    .font(.title3)
+                    .padding(.top)
+                
+                Group {
+                    TextField("First name", text: $firstName)
+                    TextField("Middle initial", text: $middleInitial)
+                    TextField("Last name", text: $lastName)
+                    
+                    // ✅ Real Date Picker
+                    DatePicker(
+                        "Date of birth",
+                        selection: $dob,
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.compact)
+                    
+                    TextField("Email", text: $email)
+                    TextField("Mobile number", text: $mobile)
+                }
+                .textFieldStyle(.roundedBorder)
+                
+                Spacer().frame(height: 20)
+                
+                NavigationLink {
+                    IdentityChoiceView()
+                } label: {
+                    Text("Continue")
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.red)
+                        .foregroundColor(.white)
+                        .cornerRadius(12)
+                }
+                
+            }
+            .padding()
+        }
+        .animation(.easeInOut, value: dob)
+    }
+}
+
+// MARK: - Screen 3: Identity Choice
+
+struct IdentityChoiceView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            
+            Spacer()
+            
+            Text("WELLS FARGO")
+                .font(.headline)
+            
+            Image(systemName: "person.text.rectangle")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 80)
+                .foregroundColor(.blue)
+            
+            Text("Next, let's confirm your identity")
+                .font(.title3)
+                .multilineTextAlignment(.center)
+            
+            VStack(spacing: 16) {
+                
+                Button {
+                    // Camera flow later
+                } label: {
+                    HStack {
+                        Image(systemName: "camera")
+                        Text("Take picture of photo ID")
+                        Spacer()
+                    }
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray))
+                }
+                
+                Text("OR")
+                    .foregroundColor(.gray)
+                
+                NavigationLink {
+                    WalletConfirmView()
+                } label: {
+                    HStack {
+                        Image(systemName: "wallet.pass")
+                        Text("Use digital wallet ID")
+                        Spacer()
+                    }
+                    .padding()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.blue, style: StrokeStyle(lineWidth: 2, dash: [6]))
+                    )
+                }
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+        }
+        .padding()
+        .transition(.move(edge: .trailing))
+    }
+}
+
+// MARK: - Screen 4: Wallet Confirmation
+
+struct WalletConfirmView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            
+            Spacer()
+            
+            Text("Double Click to Confirm")
+                .font(.title3)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Wallet")
+                    .font(.headline)
+                
+                HStack {
+                    Image(systemName: "creditcard")
+                    Text("Wells Fargo")
+                }
+                
+                HStack {
+                    Image(systemName: "person.text.rectangle")
+                    Text("California Driver's License")
+                }
+                
+                Divider()
+                
+                Text("The following information will be shared:")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+                
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("• Legal Name")
+                        Text("• Date of Birth")
+                    }
+                    Spacer()
+                    VStack(alignment: .leading) {
+                        Text("• Address")
+                        Text("• State")
+                    }
+                }
+                .font(.footnote)
+            }
+            .padding()
+            .background(Color(.systemGray6))
+            .cornerRadius(12)
+            .padding()
+            
+            NavigationLink {
+                SuccessView()
+            } label: {
+                Text("Confirm with Side Button")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.black)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+        }
+        .padding()
+        .transition(.opacity.combined(with: .move(edge: .trailing)))
+    }
+}
+
+// MARK: - Screen 5: Success
+
+struct SuccessView: View {
+    var body: some View {
+        VStack(spacing: 32) {
+            
+            Spacer()
+            
+            Text("WELLS FARGO")
+                .font(.headline)
+            
+            Image(systemName: "checkmark.circle.fill")
+                .resizable()
+                .frame(width: 100, height: 100)
+                .foregroundColor(.green)
+                .scaleEffect(1.0)
+                .animation(.spring(response: 0.5, dampingFraction: 0.6), value: UUID())
+            
+            Text("Success!")
+                .font(.title)
+                .fontWeight(.bold)
+            
+            Text("Your ID was verified")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
+            Button {
+                // End of flow
+            } label: {
+                Text("Continue")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.red)
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            
+            Spacer()
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    ContentView()
+}
