@@ -15,65 +15,75 @@ struct IdentityFormView: View {
     var body: some View {
         BankingTemplateView {
 
-            Spacer().frame(height: 20)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 0) {
 
-            Text("WELLS FARGO")
-                .font(.system(size: 20, weight: .semibold))
-                .frame(maxWidth: .infinity, alignment: .center)
+                    Spacer().frame(height: 20)
 
-            Spacer().frame(height: 20)
+                    Text("WELLS FARGO")
+                        .font(.system(size: 20, weight: .semibold))
+                        .frame(maxWidth: .infinity, alignment: .center)
 
-            Text("Your new account is\nminutes away")
-                .font(.system(size: 26, weight: .semibold))
+                    Spacer().frame(height: 20)
 
-            Spacer().frame(height: 20)
+                    Text("Your new account is\nminutes away")
+                        .font(.system(size: 26, weight: .semibold))
 
-            Text("Your name")
-                .font(.system(size: 16, weight: .semibold))
+                    Spacer().frame(height: 20)
 
-            Group {
-                BankingTextField(placeholder: "First name", text: $firstName)
-                BankingTextField(placeholder: "Middle initial", text: $middleInitial)
-                BankingTextField(placeholder: "Last name", text: $lastName)
+                    Text("Your name")
+                        .font(.system(size: 16, weight: .semibold))
+
+                    Group {
+                        BankingTextField(placeholder: "First name", text: $firstName)
+                        BankingTextField(placeholder: "Middle initial", text: $middleInitial)
+                        BankingTextField(placeholder: "Last name", text: $lastName)
+                    }
+
+                    Spacer().frame(height: 20)
+
+                    Text("Verify your identity")
+                        .font(.system(size: 16, weight: .semibold))
+
+                    Group {
+                        BankingTextField(placeholder: "Date of birth", text: $dob)
+                        BankingTextField(placeholder: "Email", text: $email)
+                        BankingTextField(placeholder: "Mobile number", text: $mobile)
+                    }
+
+                    Spacer().frame(height: 30)
+
+                    // MARK: - Essential Info Section
+
+                    Text("Essential info and agreements for you")
+                        .font(.system(size: 18, weight: .semibold))
+
+                    Spacer().frame(height: 14)
+
+                    authorizationCard
+
+                    Spacer().frame(height: 20)
+
+                    agreementsSection
+
+                    Spacer().frame(height: 16)
+
+                    Text("You won’t be able to return or edit your info after you select Agree and continue.")
+                        .font(.system(size: 12))
+                        .foregroundColor(.gray)
+
+                    Spacer().frame(height: 30)
+
+                    PrimaryButton(title: "Agree and continue")
+                        .opacity(isAuthorized ? 1 : 0.6)
+                        .disabled(!isAuthorized)
+
+                    // important: give breathing room at the bottom
+                    Spacer().frame(height: 40)
+                }
+                .padding(.horizontal, 16)   // keeps content from touching edges while scrolling
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-
-            Spacer().frame(height: 20)
-
-            Text("Verify your identity")
-                .font(.system(size: 16, weight: .semibold))
-
-            Group {
-                BankingTextField(placeholder: "Date of birth", text: $dob)
-                BankingTextField(placeholder: "Email", text: $email)
-                BankingTextField(placeholder: "Mobile number", text: $mobile)
-            }
-
-            Spacer().frame(height: 30)
-
-            // MARK: - Essential Info Section
-
-            Text("Essential info and agreements for you")
-                .font(.system(size: 18, weight: .semibold))
-
-            Spacer().frame(height: 14)
-
-            authorizationCard
-
-            Spacer().frame(height: 20)
-
-            agreementsSection
-
-            Spacer().frame(height: 16)
-
-            Text("You won’t be able to return or edit your info after you select Agree and continue.")
-                .font(.system(size: 12))
-                .foregroundColor(.gray)
-
-            Spacer().frame(height: 30)
-
-            PrimaryButton(title: "Agree and continue")
-                .opacity(isAuthorized ? 1 : 0.6)
-                .disabled(!isAuthorized)
         }
     }
 
@@ -128,14 +138,11 @@ I authorize the Social Security Administration (SSA) to verify and disclose to W
                 .font(.system(size: 14, weight: .semibold))
 
             bullet("Wells Fargo must obtain, verify, and record details about anyone opening an account.")
-
             bullet("Wells Fargo will obtain your consumer report to review your application. This won’t affect your credit score. You confirm your info is true.")
-
             bullet("Wells Fargo may contact you at any number you provide using automated systems. Message and data rates apply.")
 
             if showMore {
                 bullet("You consent to receive account disclosures electronically where applicable.")
-
                 bullet("Additional product-specific agreements may apply depending on your selected account type.")
             }
 
